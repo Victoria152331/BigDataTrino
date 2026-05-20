@@ -1,4 +1,18 @@
 # BigDataTrino
+
+## Инструкция по запуску:
+Запуск контейнеров:
+
+```docker compose up -d```
+
+Запуск скриптов Trino:
+
+```docker exec -it hl_lab4_trino trino --file /sql/01_raw_to_star.sql```
+
+```docker exec -it hl_lab4_trino trino --file /sql/02_star_to_datamart.sql```
+
+## Условие:
+
 Анализ больших данных - лабораторная работа №4 - ETL реализованный с помощью Trino
 
 Одним из самых популярных фреймворков для анализа данных Big Data является Trino. Trino позволяет с помощью SQL анализировать большие объёмы данных.

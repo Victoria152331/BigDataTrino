@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: hl_lab4_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bigdata_trino
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1111
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
+      - ./исходные данные:/data
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    container_name: hl_lab4_clickhouse
+    restart: unless-stopped
+    environment:
+      CLICKHOUSE_DB: bigdata_trino
+      CLICKHOUSE_USER: user
+      CLICKHOUSE_PASSWORD: 1111
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports:
+      - "8124:8123"
+      - "9001:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./clickhouse-init:/docker-entrypoint-initdb.d
+      - ./исходные данные:/var/lib/clickhouse/user_files
+
+  trino:
+    image: trinodb/trino:453
+    container_name: hl_lab4_trino
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog
+      - ./trino-sql:/sql
+    depends_on:
+      - postgres
+      - clickhouse
+
+volumes:
+  postgres_data:
+  clickhouse_data:
